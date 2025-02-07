@@ -3,10 +3,10 @@ const fs = require("fs");
 const { exec } = require("child_process");
 const path = require("path"); // ✅ Import the path module
 const crypto = require("crypto");
-
+const cors=require("cors")
 const app = express();
 app.use(express.json()); // Middleware to parse JSON
-
+app.use(cors())
 const files = {
   javascript: "script.js",
   python: "script.py",
@@ -58,10 +58,10 @@ app.post("/execute", (req, res) => {
           return res.status(500).json({ error: "Read error" });
         }
 
-        // Send output response
+       
         res.json({ output });
 
-        // Cleanup - Remove the temporary output file
+        
         fs.unlink(outputPath, () => {});
       });
     });
