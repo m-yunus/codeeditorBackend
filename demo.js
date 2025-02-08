@@ -36,9 +36,7 @@ app.post("/execute", (req, res) => {
 
   const filePath = files[language];
 
-
-  const outputFileName = `output_${crypto.randomUUID()}.txt`;
-  const outputPath = path.join(__dirname, outputFileName); 
+ 
 
 
   fs.writeFile(filePath, code, (err) => {
@@ -46,24 +44,11 @@ app.post("/execute", (req, res) => {
       return res.status(500).json({ message: "Error writing file" });
     }
 
-    const stream = fs.createWriteStream(outputPath);
-    const process = exec(commands[language]);
-
-    process.stdout.pipe(stream);
-    process.stderr.pipe(stream);
-
-    process.on("close", () => {
-      fs.readFile(outputPath, "utf8", (err, output) => {
-        if (err) {
-          return res.status(500).json({ error: "Read error" });
-        }
-
-       
-        res.json({ output });
-
-        
-        fs.unlink(outputPath, () => {});
-      });
+    exec(commands[language], (error, stdout, stderr) => {
+      if (error) {
+        return res.json({ error: stderr || error.message });
+      }
+      res.json({ output: stdout.trim() });
     });
   });
 });
