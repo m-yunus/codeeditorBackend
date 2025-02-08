@@ -1,11 +1,11 @@
 const express = require("express");
 const fs = require("fs");
 const { exec } = require("child_process");
-const path = require("path"); // ✅ Import the path module
+const path = require("path"); 
 const crypto = require("crypto");
 const cors=require("cors")
 const app = express();
-app.use(express.json()); // Middleware to parse JSON
+app.use(express.json()); 
 app.use(cors())
 const files = {
   javascript: "script.js",
@@ -36,11 +36,11 @@ app.post("/execute", (req, res) => {
 
   const filePath = files[language];
 
-  // Generate a unique output file
-  const outputFileName = `output_${crypto.randomUUID()}.txt`;
-  const outputPath = path.join(__dirname, outputFileName); // ✅ No more "path is not defined" error
 
-  // Write code to file
+  const outputFileName = `output_${crypto.randomUUID()}.txt`;
+  const outputPath = path.join(__dirname, outputFileName); 
+
+
   fs.writeFile(filePath, code, (err) => {
     if (err) {
       return res.status(500).json({ message: "Error writing file" });
